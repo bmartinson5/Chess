@@ -9,6 +9,7 @@ abstract public class Piece {
     protected String name;
     protected String id;
 
+
     public String getId() {
         return id;
     }
@@ -39,39 +40,18 @@ abstract public class Piece {
         return name;
     }
 
-    abstract public boolean checkMove(int newXCoordinate, int newYCoordinate);
+    abstract public boolean checkMove(LocationInfo locInfo);
 
-    public void changeLocation(int newXCoordinate, int newYCoordinate){
-        this.xCoordinate = newXCoordinate;
-        this.yCoordinate = newYCoordinate;
+    public void changeLocation(LocationInfo locInfo){
+        this.xCoordinate = locInfo.newX;
+        this.yCoordinate = locInfo.newY;
     }
 
-    protected boolean checkDiagonalMove(int newXCoordinate, int newYCoordinate){
 
-        //used by bishop and queen
 
-        int xAxisChange = abs(this.xCoordinate - newXCoordinate);
-        int yAxisChange = abs(this.yCoordinate - newYCoordinate);
-        int coordinateCompare = abs(xAxisChange - yAxisChange);
-
-        if(coordinateCompare == 0)  //legal diagonal move; x and y change are equal
-            return true;
-        return false;
-    }
-
-    protected boolean checkVerticalHorizontalMove(int newXCoordinate, int newYCoordinate){
-
-        int xAxisChange = abs(this.xCoordinate - newXCoordinate);
-        int yAxisChange = abs(this.yCoordinate - newYCoordinate);
-
-        if(xAxisChange > 0 && yAxisChange == 0)  //vertical change
-            return true;
-
-        if(yAxisChange > 0 && xAxisChange == 0)  //horizontal change
-            return true;
-
-        return false; //illegal move
-    }
 
 
 }
+
+
+

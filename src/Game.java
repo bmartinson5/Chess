@@ -1,3 +1,4 @@
+import pieces.LocationInfo;
 import pieces.Piece;
 
 import java.util.Scanner;
@@ -14,32 +15,74 @@ public class Game {
 
         boolean gameContinue = true;
         Player turn = player1;
+        Player other = player2;
 
         while(gameContinue){
             printBoard();
 
-            System.out.println("It's " + turn.getName() + "'s turn");
+            boolean validMove = true;
 
-            System.out.print("X value of piece you want to move: ");
-            int x = scanner.nextInt();
-            System.out.print("Y value of piece you want to move: ");
-            int y = scanner.nextInt();
-
-            System.out.print("X value of location you want to move: ");
-            int newX = scanner.nextInt();
-            System.out.print("Y value of location you want to move: ");
-            int newY = scanner.nextInt();
-
-
-            if(checkInBounds(x, y))
-                turn.movePlayer(x, y, newX, newY);
-
+            do {
+                validMove = gameTurn(turn, other, scanner);
+            } while(!validMove);
 
             //change turn
             turn = (turn == player1) ? player2 : player1;
+            other = (other == player1) ? player2 : player1;
 
         }
 
+    }
+
+    public static boolean gameTurn(Player turn, Player other, Scanner scanner){
+        System.out.println("It's " + turn.getName() + "'s turn");
+
+        System.out.print("X value of piece you want to move: ");
+        int x = scanner.nextInt();
+        System.out.print("Y value of piece you want to move: ");
+        int y = scanner.nextInt();
+
+        if(turn.checkLocationForPiece(x, y) == null){
+            System.out.println("\nYou do not have a piece at that location! Try Again.\n");
+            return false;
+        }
+
+        System.out.print("X value of location you want to move this piece to: ");
+        int newX = scanner.nextInt();
+        System.out.print("Y value of location you want to move this piece to: ");
+        int newY = scanner.nextInt();
+
+        if(!checkInBounds(newX, newY)){
+            System.out.println("\nNot a valid location! Try Again.\n");
+            return false;
+        }
+        LocationInfo locationInfo = new LocationInfo(x, y, newX, newY);
+
+        return checkPlayerMove(turn, other, locationInfo);
+    }
+
+
+    public static boolean checkPlayerMove(Player turn, Player other, LocationInfo locationInfo){
+        //complete move if valid
+        //check for opponent piece at new location and in between,
+        // and then move player, which validates further
+        if(turn.checkForPieceBetween(locationInfo)
+                || other.checkForPieceBetween(locationInfo)
+                || turn.checkLocationForPiece(locationInfo.newX, locationInfo.newY) != null
+                || !turn.movePlayer(locationInfo)
+            ){
+
+            System.out.println("\nIllegal move! Try Again.\n");
+            return false;
+        }
+        else{
+            Piece defeatedPiece = other.checkLocationForPiece(locationInfo.newX, locationInfo.newY);
+            if(defeatedPiece != null){
+                System.out.println(other.getName() + " has lost a piece!");
+                other.removePiece(defeatedPiece);
+            }
+            return true;
+        }
     }
 
     public static boolean checkInBounds(int x, int y){
@@ -72,4 +115,6 @@ public class Game {
         System.out.print("    1     2     3     4     5     6     7     8\n");
         System.out.print("\n\t\t" + player1.getName() + "'s Pieces\n\n");
     }
+
+
 }

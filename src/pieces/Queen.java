@@ -8,9 +8,9 @@ public class Queen extends Piece{
     }
 
     @Override
-    public boolean checkMove(int newXCoordinate, int newYCoordinate) {
-        if(checkDiagonalMove(newXCoordinate, newYCoordinate) ||
-                checkVerticalHorizontalMove(newXCoordinate, newYCoordinate))
+    public boolean checkMove(LocationInfo locInfo) {
+        if(locInfo.checkDiagonalMove() ||
+                locInfo.checkVerticalHorizontalMove())
             return true;
         return false;
     }

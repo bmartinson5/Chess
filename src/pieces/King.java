@@ -9,9 +9,9 @@ public class King extends Piece {
     }
 
     @Override
-    public boolean checkMove(int newXCoordinate, int newYCoordinate) {
-        int xAxisChange = abs(this.xCoordinate - newXCoordinate);
-        int yAxisChange = abs(this.yCoordinate - newYCoordinate);
+    public boolean checkMove(LocationInfo locationInfo) {
+        int xAxisChange = abs(this.xCoordinate - locationInfo.newX);
+        int yAxisChange = abs(this.yCoordinate - locationInfo.newY);
         int coordinateCompare = abs(xAxisChange - yAxisChange);
 
         if(xAxisChange > 1 || yAxisChange > 1)
